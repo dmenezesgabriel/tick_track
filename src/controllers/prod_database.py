@@ -12,6 +12,10 @@ database_path = folder_utils.folder_path(path)
 database = peewee.SqliteDatabase(database_path)
 
 
+def close_connection():
+    database.close()
+
+
 def initialize_db():
     """Create a database connection to the SQLite database specified by db_file
     :database: database file

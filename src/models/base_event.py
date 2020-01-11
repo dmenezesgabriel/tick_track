@@ -7,7 +7,7 @@ class BaseEvent(BaseModel):
     name = peewee.CharField()
     model = peewee.CharField(index=True)
     model_id = peewee.CharField(index=True)
-    created_at = peewee.CharField()
+    created_at = peewee.DateTimeField()
 
     class Meta:
         def table_function(model_cls):
