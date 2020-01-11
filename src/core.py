@@ -11,7 +11,7 @@ logging.basicConfig(
 _logger = logging.getLogger("Core")
 
 
-def start():
+async def start():
     """Start core"""
     _logger.info(f"Starting Core")
     # Connect to database
@@ -23,4 +23,4 @@ def start():
     _logger.info(f"Tables: {tables}")
 
     # Run Inspector
-    inspector_controller.run()
+    await inspector_controller.run()

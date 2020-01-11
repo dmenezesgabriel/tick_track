@@ -39,7 +39,7 @@ class BaseEvent(BaseModel):
     name = peewee.CharField()
     model = peewee.CharField(index=True)
     model_id = peewee.CharField(index=True)
-    created_at = peewee.CharField()
+    created_at = peewee.DateTimeField()
 
     class Meta:
         db_table = "Events"
@@ -49,8 +49,9 @@ class BaseTimeEntry(BaseModel):
     id = peewee.PrimaryKeyField()
     model = peewee.CharField(index=True)
     model_id = peewee.CharField(index=True)
-    start_time = peewee.CharField()
-    end_time = peewee.CharField()
+    start_time = peewee.DateTimeField()
+    end_time = peewee.DateTimeField()
+    duration = peewee.TimeField()
 
     class Meta:
         db_table = "TimeEntries"

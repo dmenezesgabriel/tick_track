@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 import logging
 import sys
@@ -35,7 +36,7 @@ def import_os_utils():
     _current_os = load_os()
 
     # Import current_os
-    _logger.info(f"Importing current operational system: {_current_os}")
+    _logger.info(f"Importing current operational system: {_current_os.name}")
     _current_os.import_os_utils()
 
 
@@ -44,7 +45,7 @@ def get_current_window():
     return _current_os.get_active_window()
 
 
-def run():
+async def run():
     """Run and inspect window changing"""
     _logger.info(f"Running Inspector")
     import_os_utils()
@@ -57,12 +58,20 @@ def run():
 
         # Current window name
         current_window_name = get_current_window()
-        start_time = timestamptz_to_text(now_br())
+        start_time = now_br()
 
         while True:
+            # Take a break
+            await asyncio.sleep(1)
+
+            # Check if there is an window change
             current_window_name = get_current_window()
             if previous_window_name != current_window_name:
-                previous_end_time = timestamptz_to_text(now_br())
+                previous_end_time = now_br()
+
+                # Calculate duration
+                if previous_start_time is not None:
+                    duration = (previous_end_time - previous_start_time)
 
                 # Create event
                 query = Activity.select().where(
@@ -75,7 +84,7 @@ def run():
                         name="status_change",
                         model="activity",
                         model_id=str(activity.id),
-                        created_at=timestamptz_to_text(now_br())
+                        created_at=now_br()
                     )
 
                     # Create a time entry for the events
@@ -86,7 +95,8 @@ def run():
                         model="event",
                         model_id=str(event.id),
                         start_time=previous_start_time,
-                        end_time=previous_end_time
+                        end_time=previous_end_time,
+                        duration=duration
                     )
 
                 # Create activity
@@ -96,14 +106,11 @@ def run():
                         operational_system=_current_os
                     )
                     _logger.info(f"Current window name: {current_window_name}")
-                    start_time = timestamptz_to_text(now_br())
+                    start_time = now_br()
                 previous_window_name = current_window_name
 
             # Previows window name
             previous_start_time = start_time
-
-            # Take a break
-            time.sleep(1)
 
     except KeyboardInterrupt:
 
@@ -125,21 +132,25 @@ def run():
                 name="status_change",
                 model="activity",
                 model_id=str(activity.id),
-                created_at=timestamptz_to_text(now_br())
+                created_at=now_br()
             )
             # Create a time entry for the events
             event = (
                 Events.select().order_by(Events.id.desc()).get()
             )
+
+            previous_end_time = now_br()
+            # Calculate duration
+            if previous_start_time is not None:
+                duration = (previous_end_time - previous_start_time)
+
             time_entry = TimeEntry.create(
                 model="event",
                 model_id=str(event.id),
-                start_time=start_time,
-                end_time=timestamptz_to_text(now_br())
+                start_time=previous_start_time,
+                end_time=previous_end_time,
+                duration=duration
             )
-
-            # Take a break
-            time.sleep(1)
 
         _logger.info("Program execution cancelled by the user")
         sys.exit()
