@@ -1,11 +1,11 @@
-from src.models.base import BaseModel
 import peewee
+from src.models.base import BaseModel
+from src.models.base_event import BaseEvent
 
 
 class BaseTimeEntry(BaseModel):
     id = peewee.PrimaryKeyField()
-    model = peewee.CharField(index=True)
-    model_id = peewee.CharField(index=True)
+    event = peewee.ForeignKeyField(BaseEvent)
     start_time = peewee.DateTimeField()
     end_time = peewee.DateTimeField()
     duration = peewee.TimeField()
