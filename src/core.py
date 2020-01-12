@@ -1,5 +1,6 @@
 import src.controllers.inspector as inspector_controller
 import src.controllers.prod_database as prod_database_controller
+import src.sanic_api as sanic_api
 import datetime
 import logging
 
@@ -21,6 +22,9 @@ async def start():
     # Check database tables
     tables = prod_database_controller.database.get_tables()
     _logger.info(f"Tables: {tables}")
+
+    # Sanic Api start
+    sanic_api.start()
 
     # Run Inspector
     await inspector_controller.run()
