@@ -92,8 +92,7 @@ async def run():
                         Events.select().order_by(Events.id.desc()).get()
                     )
                     time_entry = TimeEntry.create(
-                        model="event",
-                        model_id=str(event.id),
+                        event=event,
                         start_time=previous_start_time,
                         end_time=previous_end_time,
                         duration=duration
@@ -145,8 +144,7 @@ async def run():
                 duration = (previous_end_time - previous_start_time)
 
             time_entry = TimeEntry.create(
-                model="event",
-                model_id=str(event.id),
+                event=event,
                 start_time=previous_start_time,
                 end_time=previous_end_time,
                 duration=duration
