@@ -15,6 +15,12 @@ def get_active_window_raw():
     m = re.search(b'^_NET_ACTIVE_WINDOW.* ([\w]+)$', stdout)
     if m is not None:
         window_id = m.group(1)
+
+        # If window don't return id
+        if window_id == b'0x0':
+            return b"Unmapped window"
+
+        # If window returns id
         window = subprocess.Popen(
             ['xprop', '-id', window_id, 'WM_NAME'], stdout=subprocess.PIPE)
         stdout, stderr = window.communicate()
