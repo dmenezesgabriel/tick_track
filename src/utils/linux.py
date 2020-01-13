@@ -26,7 +26,7 @@ def get_active_window_raw():
         ret = match.group("name").strip(b'"')
         return ret
     # If window does not have an id (experienced on Fedora)
-    return "Unmapped window"
+    return b"Unmapped window"
 
 
 def get_active_window():

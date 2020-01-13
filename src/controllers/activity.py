@@ -12,7 +12,7 @@ class DefaultActivity(BaseActivity):
             Event.select(
                 Activity.name,
                 TimeEntry.start_time,
-                TimeENtry.end_time,
+                TimeEntry.end_time,
                 TimeEntry.duration,
             )
             .join(TimeEntry, on=(Event.id == TimeEntry.event_id))
