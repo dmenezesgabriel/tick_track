@@ -50,7 +50,7 @@ class BaseTimeEntry(BaseModel):
     event = peewee.ForeignKeyField(BaseEvent)
     start_time = peewee.DateTimeField()
     end_time = peewee.DateTimeField()
-    duration = peewee.TimeField()
+    duration = peewee.DecimalField()
 
     class Meta:
         db_table = "TimeEntries"

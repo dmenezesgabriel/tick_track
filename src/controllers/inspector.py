@@ -71,7 +71,8 @@ async def run():
 
                 # Calculate duration
                 if previous_start_time is not None:
-                    duration = (previous_end_time - previous_start_time)
+                    duration = (
+                        previous_end_time - previous_start_time).total_seconds()
 
                 # Create event
                 query = Activity.select().where(
@@ -141,7 +142,8 @@ async def run():
             previous_end_time = now_br()
             # Calculate duration
             if previous_start_time is not None:
-                duration = (previous_end_time - previous_start_time)
+                duration = (
+                    previous_end_time - previous_start_time).total_seconds()
 
             time_entry = TimeEntry.create(
                 event=event,

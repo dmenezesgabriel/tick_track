@@ -11,9 +11,10 @@ _logger = logging.getLogger("Sanic")
 app = Sanic(__name__)
 
 
-@app.route("/load/activities", methods=["GET"])
+@app.route("/load", methods=["GET"])
 async def load_activities(request):
-    return json(api.load_activities())
+    activities_list = await api.load_activities()
+    return json(activities_list)
 
 
 @app.route("/", methods=["GET"])
