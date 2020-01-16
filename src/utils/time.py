@@ -25,3 +25,7 @@ def timestamptz_to_text(timestamptz):
 def timestamptz_text_to_date(text):
     text
     return datetime.datetime.strptime(text, "%Y-%m-%d %H:%M:%S.%f%z")
+
+
+def date_trunc_day(timestamptz):
+    return timestamptz.replace(hour=0, minute=0, second=0, microsecond=0)
