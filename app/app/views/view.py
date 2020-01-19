@@ -5,7 +5,6 @@ import matplotlib as plt
 import pandas as pd
 import re
 import requests
-import urllib.parse
 
 
 view = Blueprint("view", __name__)
@@ -37,6 +36,12 @@ def load_data():
     # Duration times from seconds to hours
     df["duration_time"] = df.duration.round().apply(pd.to_timedelta, unit='s')
 
+    return df
+
+
+def make_last_name_df():
+    df = load_data()
+
     # More than 1 minute spent at the window
     df_last_name_time = (
         df[df["duration"] > 60][["last_name", "duration_time"]].groupby("last_name").agg("sum"))
@@ -46,7 +51,7 @@ def load_data():
 
 
 def create_figure():
-    df = load_data()
+    df = make_last_name_df()
     chart = df.plot.barh(x="last_name", y="duration_time")
     fig = chart.get_figure()
     return fig
@@ -65,7 +70,7 @@ def plot_png():
 
 @view.route("/", methods=["GET"])
 def index():
-    data = load_data()
+    data = make_last_name_df()
     return render_template(
         "index.html", tables=[data.to_html(classes='data', header="true")]
     )
