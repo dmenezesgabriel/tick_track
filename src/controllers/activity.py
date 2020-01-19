@@ -14,7 +14,7 @@ class DefaultActivity(BaseActivity):
         query = (
             Event.select(
                 Activity.name,
-                fn.sum(TimeEntry.duration),
+                fn.sum(TimeEntry.duration).alias("duration"),
             )
             .join(TimeEntry, on=(Event.id == TimeEntry.event_id))
             .join(Activity, on=(Event.model_id == Activity.id))
@@ -29,7 +29,7 @@ class DefaultActivity(BaseActivity):
         query = (
             Event.select(
                 Activity.name,
-                fn.sum(TimeEntry.duration),
+                fn.sum(TimeEntry.duration).alias("duration"),
             )
             .join(TimeEntry, on=(Event.id == TimeEntry.event_id))
             .join(Activity, on=(Event.model_id == Activity.id))
@@ -46,12 +46,13 @@ class DefaultActivity(BaseActivity):
         query = (
             Event.select(
                 Activity.name,
-                fn.sum(TimeEntry.duration),
+                fn.sum(TimeEntry.duration).alias("duration"),
             )
             .join(TimeEntry, on=(Event.id == TimeEntry.event_id))
             .join(Activity, on=(Event.model_id == Activity.id))
             .where(
-               (TimeEntry.start_time > start_date) & (TimeEntry.end_time < end_date)
+               (TimeEntry.start_time > start_date) &
+               (TimeEntry.end_time < end_date)
             ).group_by(Activity.name)
         ).dicts()
 
