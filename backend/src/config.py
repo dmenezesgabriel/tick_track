@@ -1,17 +1,44 @@
+import os
+from dotenv import load_dotenv
+from src.helpers import folder as folder_helper
+
+
+load_dotenv(dotenv_path=folder_helper.path(['environment_variables.env']))
+
+
 class Config(object):
-    DEBUG: bool = False
-    TESTING: bool = False
-    HOST: str = '0.0.0.0'
-    PORT: int = 8000
+    """
+    Common configurations
+    """
+    DEBUG = False
+    TESTING = False
+    HOST = os.getenv('HOST')
+    PORT = os.getenv('PORT')
 
 
 class ProductionConfig(Config):
-    pass
+    """
+    Production configurations
+    """
+    DEBUG = False
 
 
 class DevelopmentConfig(Config):
-    DEBUG: bool = True
+    """
+    Development configurations
+    """
+    DEBUG = True
 
 
 class TestingConfig(Config):
-    TESTING: bool = True
+    """
+    Testing configurations
+    """
+    TESTING = True
+
+
+app_config = {
+    'development': DevelopmentConfig,
+    'production': ProductionConfig,
+    'testing': TestingConfig
+}
