@@ -34,7 +34,7 @@ def initialize_db():
     return conn
 
 
-def setup_database(app):
+async def setup_database(app):
     """
     Define when start or close the database
     :app: Receives a Sanic app instance

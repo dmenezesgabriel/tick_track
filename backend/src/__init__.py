@@ -1,38 +1,31 @@
-import logging
+import os
 from sanic import Sanic
 from sanic.response import json
 from src.controllers import monitor as monitor_controller
 from src.controllers import prod_database as prod_database_controller
 import src.routes as routes
-from src import config
-
-
-logging_format = "[%(asctime)s] %(process)d-%(levelname)s "
-logging_format += "%(module)s::%(funcName)s():l%(lineno)d: "
-logging_format += "%(message)s"
-
-logging.basicConfig(
-    format=logging_format,
-    level=logging.INFO
-)
-_logger = logging.getLogger('Core')
+from src.config import app_config
+from src.helpers import logger as logger_helper
 
 
 def create_app():
     """
     Create ad configure the app
     """
-    app = Sanic(__name__)
-    app.config.from_object(config.Config)
+    environment = os.getenv('ENVIRONMENT')
+    print(environment)
 
-    # Initialize the database
-    prod_database_controller.setup_database(app)
+    app = Sanic(__name__)
+
+    app.config.from_object(app_config[environment])
+
+    # Add background tasks
+    app.add_task(logger_helper.setup_logger(environment))
+    app.add_task(prod_database_controller.setup_database(app))
+    app.add_task(monitor_controller.run())
 
     # Setup routes
     routes.setup_routes(app)
-
-    # Add background tasks
-    app.add_task(monitor_controller.run())
 
     @app.route('/hello')
     async def hello(request):
@@ -45,11 +38,8 @@ def init():
     """
     Initialize App
     """
-    _logger.info('Initializating app')
     app = create_app()
     app.run(
         host=app.config.HOST,
-        port=app.config.PORT,
-        debug=app.config.DEBUG,
-        auto_reload=app.config.DEBUG
+        port=app.config.PORT
     )
