@@ -40,5 +40,6 @@ def init():
     app = create_app()
     app.run(
         host=app.config.HOST,
-        port=app.config.PORT
+        port=app.config.PORT,
+        auto_reload=app.config.DEBUG
     )
