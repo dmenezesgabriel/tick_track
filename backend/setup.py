@@ -7,6 +7,7 @@ setup(
         'sanic==19.12.2',
         'pytz==2019.3',
         'peewee==3.13.1',
+        'python-dotenv'
     ],
 
     author='Gabriel Menezes',
