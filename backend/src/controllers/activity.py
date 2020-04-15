@@ -1,4 +1,5 @@
 
+import re
 from peewee import fn
 from src.models.activity import BaseActivity
 from src.controllers.event import DefaultEvent as Event
@@ -27,7 +28,7 @@ class DefaultActivity(BaseActivity):
             .group_by(Activity.name)
         ).dicts()
 
-        return [dict(result) for result in query]
+        return cls.prepare_names([dict(result) for result in query])
 
     @classmethod
     def load_today(cls) -> list:
@@ -47,7 +48,7 @@ class DefaultActivity(BaseActivity):
             ).group_by(Activity.name)
         ).dicts()
 
-        return [dict(result) for result in query]
+        return cls.prepare_names([dict(result) for result in query])
 
     @classmethod
     def load_range(cls, start_date, end_date) -> list:
@@ -70,4 +71,28 @@ class DefaultActivity(BaseActivity):
             ).group_by(Activity.name)
         ).dicts()
 
-        return [dict(result) for result in query]
+        return cls.prepare_names([dict(result) for result in query])
+
+    @staticmethod
+    def prepare_names(activity_list):
+        for activity in activity_list:
+            description_levels = re.split('\-|\|', activity['name'])
+            main_description = description_levels[-1]
+            detailed_description = (
+                description_levels[1:-1]
+                if len(description_levels) > 2 else None
+            )
+            detailed_description = (
+                ' '.join(map(str, detailed_description))
+                if detailed_description else None
+            )
+            detailed_description_2 = (
+                description_levels[0]
+                if len(description_levels) > 1 else None
+            )
+            activity.update(dict(
+                                 main_description=main_description,
+                                 detailed_description=detailed_description,
+                                 detailed_description_2=detailed_description_2)
+                            )
+        return activity_list

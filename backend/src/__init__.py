@@ -13,7 +13,6 @@ def create_app():
     Create ad configure the app
     """
     environment = os.getenv('ENVIRONMENT')
-    print(environment)
 
     app = Sanic(__name__)
 
