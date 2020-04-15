@@ -80,19 +80,21 @@ class DefaultActivity(BaseActivity):
             main_description = description_levels[-1]
             detailed_description = (
                 description_levels[1:-1]
-                if len(description_levels) > 2 else None
+                if len(description_levels) > 2 else
+                description_levels[0:-1]
+                if len(description_levels) > 1 else None
             )
             detailed_description = (
                 ' '.join(map(str, detailed_description))
                 if detailed_description else None
             )
-            detailed_description_2 = (
+            more_details = (
                 description_levels[0]
-                if len(description_levels) > 1 else None
+                if len(description_levels) > 2 else None
             )
             activity.update(dict(
                                  main_description=main_description,
                                  detailed_description=detailed_description,
-                                 detailed_description_2=detailed_description_2)
+                                 more_details=more_details)
                             )
         return activity_list
