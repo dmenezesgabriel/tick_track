@@ -1,8 +1,10 @@
 import logging
+import traceback
 import asyncio
 import src.helpers.platform as platform_helper
 import src.helpers.time as time_helper
 from src.controllers.activity import DefaultActivity as Activity
+from src.controllers.activity import DefaultActivityIndex as ActivityIndex
 from src.controllers.event import DefaultEvent as Event
 from src.controllers.time_entry import DefaultTimeEntry as TimeEntry
 from src.controllers.operational_system import (
@@ -54,6 +56,13 @@ async def run():
                     operational_system=os_object
                 )
 
+                if activity[1]:
+                    # Create activity index
+                    ActivityIndex.create(
+                        rowid=activity[0].id,
+                        name=activity[0].name
+                    )
+
                 # Create event
                 event = Event.create(
                     name="window_changed",
@@ -70,8 +79,8 @@ async def run():
             # Take a break
             await asyncio.sleep(1)
 
-    except Exception as error:
-        _logger.error('Error on run. Error: %s', error)
+    except Exception:
+        _logger.error('Error on run. Error: %s', traceback.format_exc())
 
     finally:
         # Create previous activity time entry

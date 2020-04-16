@@ -1,7 +1,7 @@
 
 import re
 from peewee import fn
-from src.models.activity import BaseActivity
+from src.models.activity import BaseActivity, BaseActivityIndex
 from src.controllers.event import DefaultEvent as Event
 from src.controllers.time_entry import DefaultTimeEntry as TimeEntry
 from src.helpers.time import now_br, date_trunc_day
@@ -73,6 +73,22 @@ class DefaultActivity(BaseActivity):
 
         return cls.prepare_names([dict(result) for result in query])
 
+    @classmethod
+    def full_text_search(cls, text) -> list:
+        """
+        Returns today's registered activities
+        """
+        Activity = cls.alias()
+        ActivityIndex = DefaultActivityIndex().alias()
+        query = (
+            Activity
+            .select()
+            .join(ActivityIndex, on=(Activity.id == ActivityIndex.rowid))
+            .where(ActivityIndex.match(text))
+            .order_by(ActivityIndex.bm25())).dicts()
+
+        return cls.prepare_names([dict(result) for result in query])
+
     @staticmethod
     def prepare_names(activity_list):
         for activity in activity_list:
@@ -98,3 +114,10 @@ class DefaultActivity(BaseActivity):
                                  more_details=more_details)
                             )
         return activity_list
+
+
+class DefaultActivityIndex(BaseActivityIndex):
+    """
+    Activity full text search
+    """
+    pass

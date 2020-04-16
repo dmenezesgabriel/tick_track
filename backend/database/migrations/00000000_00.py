@@ -1,12 +1,20 @@
 import os
 import peewee
 from playhouse.sqlite_ext import JSONField
+from playhouse.sqlite_ext import (
+    SqliteExtDatabase, FTSModel, RowIDField, SearchField)
 
 dir_path = os.path.dirname(__file__)
 database_path = os.path.join(dir_path, os.pardir, 'database_prod.db')
 
+pragmas = (
+    ('cache_size', -1024 * 64),  # 64MB page-cache.
+    ('journal_mode', 'wal'),  # Use WAL-mode (you should always use this!).
+    ('foreign_keys', 1)  # Enforce foreign-key constraints.
+)
+
 # Create database
-db = peewee.SqliteDatabase(database_path)
+db = SqliteExtDatabase(database_path, pragmas=pragmas)
 
 
 class BaseModel(peewee.Model):
@@ -26,11 +34,21 @@ class BaseOperationalSystem(BaseModel):
 
 class BaseActivity(BaseModel):
     id = peewee.PrimaryKeyField()
-    name = peewee.CharField(unique=True)
+    name = peewee.TextField(unique=True)
     operational_system = peewee.ForeignKeyField(BaseOperationalSystem)
 
     class Meta:
         db_table = "Activity"
+
+
+class BaseActivityIndex(BaseModel, FTSModel):
+    rowid = RowIDField()
+    name = SearchField()
+
+    class Meta:
+        db_table = "ActivityIndex"
+        # Use the porter stemming algorithm to tokenize content.
+        options = {'tokenize': 'porter'}
 
 
 class BaseEvent(BaseModel):
@@ -59,6 +77,7 @@ class BaseTimeEntry(BaseModel):
 def apply():
     tables = [
         BaseActivity,
+        BaseActivityIndex,
         BaseEvent,
         BaseOperationalSystem,
         BaseTimeEntry
