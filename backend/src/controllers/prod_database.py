@@ -37,18 +37,3 @@ def initialize_db():
         _logger.error('Error at database initialization. Error: %s', error)
 
     return conn
-
-
-async def setup_database(app):
-    """
-    Define when start or close the database
-    :app: Receives a Sanic app instance
-    """
-
-    @app.listener('after_server_start')
-    async def connect_to_db(*args, **kwargs):
-        initialize_db()
-
-    @app.listener('after_server_stop')
-    async def disconnect_from_db(*args, **kwargs):
-        close_connection()

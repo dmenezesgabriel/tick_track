@@ -14,6 +14,13 @@ from src.controllers.operational_system import (
 
 _logger = logging.getLogger('WindowController')
 
+_should_run = True
+
+
+def stop_monitor():
+    global _should_run
+    _should_run = False
+
 
 async def run():
     """
@@ -32,7 +39,7 @@ async def run():
     previous_event = None
 
     try:
-        while True:
+        while _should_run:
             active_window_name = platform_helper.os_get_active_window(os_name)
             active_window_start = time_helper.now_br()
 

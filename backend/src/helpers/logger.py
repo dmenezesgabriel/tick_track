@@ -1,7 +1,7 @@
 import logging
 
 
-async def setup_logger(environment) -> logging.Logger:
+def setup_logger(environment) -> logging.Logger:
     """
     Overwrites logger default configuration
     :environment: receives a string that can be 'development', 'production',
