@@ -19,8 +19,17 @@ def create_app():
     app.config.from_object(app_config[environment])
 
     # Add background tasks
-    app.add_task(logger_helper.setup_logger(environment))
-    app.add_task(prod_database_controller.setup_database(app))
+
+    @app.listener('before_server_start')
+    async def init(*args, **kwargs):
+        logger_helper.setup_logger(environment)
+        prod_database_controller.initialize_db()
+
+    @app.listener('after_server_stop')
+    async def stop(*args, **kwargs):
+        monitor_controller.stop_monitor()
+        prod_database_controller.close_connection()
+
     app.add_task(monitor_controller.run())
 
     # Setup routes

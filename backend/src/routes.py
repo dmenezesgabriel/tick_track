@@ -25,5 +25,4 @@ def setup_routes(app):
     @app.route('/activities/search', methods=['POST'])
     async def search_activity(request):
         text = request.form.get('text')
-        print(text)
         return json(Activity.full_text_search(text))
