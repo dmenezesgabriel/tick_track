@@ -28,6 +28,7 @@ def create_app(environment=os.getenv('ENVIRONMENT')):
     @app.listener('after_server_stop')
     async def stop(*args, **kwargs):
         monitor_controller.stop_monitor()
+        await asyncio.sleep(1)
         prod_database_controller.close_connection(app)
         await asyncio.sleep(1)
 
