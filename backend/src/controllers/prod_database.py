@@ -1,37 +1,49 @@
 import logging
-import src.helpers.folder as folder_helper
 from playhouse.sqlite_ext import SqliteExtDatabase
+from src.models import base as base_model
+
 
 _logger = logging.getLogger('ProdDatabaseController')
 
-DATABASE_PATH = folder_helper.path(['database', 'database_prod.db'])
 
-pragmas = (
-    ('cache_size', -1024 * 64),  # 64MB page-cache.
-    ('journal_mode', 'wal'),  # Use WAL-mode (you should always use this!).
-    ('foreign_keys', 1)  # Enforce foreign-key constraints.
-)
+def setup_db(app):
+    """
+    Set the app database config
+    :app: Sanic instance object
+    """
+    pragmas = (
+        ('cache_size', -1024 * 64),  # 64MB page-cache.
+        ('journal_mode', 'wal'),  # Use WAL-mode (you should always use this!).
+        ('foreign_keys', 1)  # Enforce foreign-key constraints.
+    )
+    database_path = app.config.DATABASE
+    return SqliteExtDatabase(database_path, pragmas=pragmas)
 
-# Pointing to database
-database = SqliteExtDatabase(DATABASE_PATH, pragmas=pragmas)
+
+def initialize_db(app):
+    """
+    Set the app database proxy config
+    :app: Sanic instance object
+    """
+    base_model.database_proxy.initialize(app.db)
 
 
-def close_connection():
+def close_connection(app):
     """
     Close the database connection
+    :app: Sanic instance object
     """
-    database.close()
+    app.db.close()
 
 
-def initialize_db():
+def connect_db(app):
     """Create a database connection to the SQLite database specified by db_file
-    :database: database file
-    :return: Connection object or None
+    :app: Sanic instance object
     """
     _logger.info('Initializing database connection')
     conn = None
     try:
-        conn = database.connect()
+        conn = app.db.connect()
         return conn
     except Exception as error:
         _logger.error('Error at database initialization. Error: %s', error)

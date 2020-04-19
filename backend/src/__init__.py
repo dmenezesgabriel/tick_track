@@ -9,10 +9,7 @@ from src.config import app_config
 from src.helpers import logger as logger_helper
 
 
-environment = os.getenv('ENVIRONMENT')
-
-
-def create_app(environment=environment):
+def create_app(environment=os.getenv('ENVIRONMENT')):
     """
     Create ad configure the app
     """
@@ -20,20 +17,21 @@ def create_app(environment=environment):
     app = Sanic(__name__)
 
     app.config.from_object(app_config[environment])
-
-    # Add background tasks
+    app.db = prod_database_controller.setup_db(app)
 
     @app.listener('before_server_start')
-    async def init(*args, **kwargs):
+    async def setup(*args, **kwargs):
         logger_helper.setup_logger(environment)
-        prod_database_controller.initialize_db()
+        prod_database_controller.initialize_db(app)
+        prod_database_controller.connect_db(app)
 
     @app.listener('after_server_stop')
     async def stop(*args, **kwargs):
         monitor_controller.stop_monitor()
-        prod_database_controller.close_connection()
+        prod_database_controller.close_connection(app)
         await asyncio.sleep(1)
 
+    # Add background tasks
     app.add_task(monitor_controller.run())
 
     # Setup routes

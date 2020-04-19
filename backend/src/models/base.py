@@ -1,5 +1,6 @@
-from src.controllers import prod_database as prod_database_controller
-from peewee import Model
+from peewee import Model, DatabaseProxy
+
+database_proxy = DatabaseProxy()
 
 
 class BaseModel(Model):
@@ -9,4 +10,4 @@ class BaseModel(Model):
 
     class Meta:
         # Indicates in which database the tables it will be created
-        database = prod_database_controller.database
+        database = database_proxy
