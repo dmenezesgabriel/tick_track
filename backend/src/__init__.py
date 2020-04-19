@@ -1,4 +1,5 @@
 import os
+import asyncio
 from sanic import Sanic
 from sanic.response import json
 from src.controllers import monitor as monitor_controller
@@ -8,11 +9,13 @@ from src.config import app_config
 from src.helpers import logger as logger_helper
 
 
-def create_app():
+environment = os.getenv('ENVIRONMENT')
+
+
+def create_app(environment=environment):
     """
     Create ad configure the app
     """
-    environment = os.getenv('ENVIRONMENT')
 
     app = Sanic(__name__)
 
@@ -29,6 +32,7 @@ def create_app():
     async def stop(*args, **kwargs):
         monitor_controller.stop_monitor()
         prod_database_controller.close_connection()
+        await asyncio.sleep(1)
 
     app.add_task(monitor_controller.run())
 
