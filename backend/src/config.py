@@ -21,6 +21,7 @@ class ProductionConfig(Config):
     Production configurations
     """
     DEBUG = False
+    DATABASE = folder_helper.path(['database', 'database_prod.db'])
 
 
 class DevelopmentConfig(Config):
@@ -28,6 +29,7 @@ class DevelopmentConfig(Config):
     Development configurations
     """
     DEBUG = True
+    DATABASE = folder_helper.path(['database', 'database_prod.db'])
 
 
 class TestingConfig(Config):
@@ -35,6 +37,7 @@ class TestingConfig(Config):
     Testing configurations
     """
     TESTING = True
+    DATABASE = folder_helper.path(['database', 'database_prod.db'])
 
 
 app_config = {
