@@ -18,6 +18,7 @@ _should_run = True
 
 
 def stop_monitor():
+    _logger.info("Stopping monitor")
     global _should_run
     _should_run = False
 
