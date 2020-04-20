@@ -37,7 +37,7 @@ class TestingConfig(Config):
     Testing configurations
     """
     TESTING = True
-    DATABASE = folder_helper.path(['database', 'database_prod.db'])
+    DATABASE = folder_helper.path(['tests', 'database_test.db'])
 
 
 app_config = {

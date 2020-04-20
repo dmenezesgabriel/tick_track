@@ -4,8 +4,6 @@ from playhouse.sqlite_ext import JSONField
 from playhouse.sqlite_ext import (
     SqliteExtDatabase, FTSModel, RowIDField, SearchField)
 
-dir_path = os.path.dirname(__file__)
-database_path = os.path.join(dir_path, os.pardir, 'database_prod.db')
 
 pragmas = (
     ('cache_size', -1024 * 64),  # 64MB page-cache.
@@ -14,7 +12,7 @@ pragmas = (
 )
 
 # Create database
-db = SqliteExtDatabase(database_path, pragmas=pragmas)
+db = SqliteExtDatabase(os.getenv('DATABASE_PATH'), pragmas=pragmas)
 
 
 class BaseModel(peewee.Model):

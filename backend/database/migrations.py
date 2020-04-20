@@ -48,6 +48,9 @@ def main():
     MIGRATIONS_EXECUTION_PATH = os.path.join(
         DIR_PATH, 'migrations', 'migrations_execution.json')
 
+    # Environment to migrate
+    environment = os.getenv('ENVIRONMENT')
+
     # Verify already applied migrations
     with open(MIGRATIONS_EXECUTION_PATH) as json_file:
         data = json.load(json_file)
@@ -55,7 +58,9 @@ def main():
         temp = data['executed']
 
         migrated_list = (
-            list(migration_done.get("name", None) for migration_done in temp))
+            [migration_done.get("name", None)for migration_done in temp
+             if environment in migration_done.get("environment", None)]
+        )
 
     # Look for migrations at migrations folder
     migrations = sorted(
@@ -70,7 +75,7 @@ def main():
 
         # If migration already applied skip
         if migration in migrated_list:
-            _logger.warning('Migration already applied')
+            _logger.warning('Migration %s already applied', migration)
             continue
 
         migration_path = os.path.join(
@@ -85,7 +90,8 @@ def main():
 
             migrated = {
                 "name": migration,
-                "date": str(now_br())
+                "date": str(now_br()),
+                "environment": environment
             }
 
             temp.append(migrated)
