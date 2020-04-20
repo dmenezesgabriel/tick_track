@@ -33,7 +33,8 @@ def create_app(environment=os.getenv('ENVIRONMENT')):
         await asyncio.sleep(1)
 
     # Add background tasks
-    app.add_task(monitor_controller.run())
+    if environment != 'testing':
+        app.add_task(monitor_controller.run())
 
     # Setup routes
     routes.setup_routes(app)
