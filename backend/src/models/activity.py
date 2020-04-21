@@ -8,7 +8,7 @@ class BaseActivity(BaseModel):
     """
     Defines the table fileds
     """
-    id = peewee.PrimaryKeyField()
+    id = peewee.AutoField()
     name = peewee.TextField(unique=True)
     operational_system = peewee.ForeignKeyField(BaseOperationalSystem)
 

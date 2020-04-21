@@ -20,8 +20,7 @@ def create_app(environment=os.getenv('ENVIRONMENT')):
     app.db = prod_database_controller.setup_db(app)
 
     @app.listener('before_server_start')
-    async def setup(*args, **kwargs):
-        logger_helper.setup_logger(environment)
+    async def start_db(*args, **kwargs):
         prod_database_controller.initialize_db(app)
         prod_database_controller.connect_db(app)
 
@@ -35,6 +34,9 @@ def create_app(environment=os.getenv('ENVIRONMENT')):
     # Add background tasks
     if environment != 'testing':
         app.add_task(monitor_controller.run())
+
+    # Setup logger
+    logger_helper.setup_logger(environment)
 
     # Setup routes
     routes.setup_routes(app)

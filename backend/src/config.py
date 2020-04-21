@@ -37,7 +37,7 @@ class TestingConfig(Config):
     Testing configurations
     """
     TESTING = True
-    DATABASE = ':memory:'
+    DATABASE = 'file::memory:?cache=shared'
 
 
 app_config = {

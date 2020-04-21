@@ -7,7 +7,7 @@ class BaseEvent(BaseModel):
     """
     Defines the table fileds
     """
-    id = peewee.PrimaryKeyField()
+    id = peewee.AutoField()
     name = peewee.CharField()
     model = peewee.CharField(index=True)
     model_id = peewee.CharField(index=True)

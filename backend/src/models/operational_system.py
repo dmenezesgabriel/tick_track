@@ -6,7 +6,7 @@ class BaseOperationalSystem(BaseModel):
     """
     Defines the table fileds
     """
-    id = peewee.PrimaryKeyField()
+    id = peewee.AutoField()
     name = peewee.CharField(unique=True)
 
     class Meta:
