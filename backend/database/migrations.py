@@ -37,7 +37,7 @@ def write_json(data, file_path):
         json.dump(data, file, indent=4)
 
 
-def main():
+def migrate(environment=os.getenv('ENVIRONMENT')):
     """
     If migrations at migrations folder not applied, apply them.
     """
@@ -47,9 +47,6 @@ def main():
     MIGRATIONS_PATH = os.path.join(DIR_PATH, 'migrations')
     MIGRATIONS_EXECUTION_PATH = os.path.join(
         DIR_PATH, 'migrations', 'migrations_execution.json')
-
-    # Environment to migrate
-    environment = os.getenv('ENVIRONMENT')
 
     # Verify already applied migrations
     with open(MIGRATIONS_EXECUTION_PATH) as json_file:
@@ -78,12 +75,14 @@ def main():
             _logger.warning('Migration %s already applied', migration)
             continue
 
+        # Import migration
         migration_path = os.path.join(
             os.path.dirname(__file__), 'migrations', migration)
         spec = util.spec_from_file_location(migration, migration_path)
         migration_import = util.module_from_spec(spec)
         spec.loader.exec_module(migration_import)
 
+        # Apply migrations
         try:
             migration_import.apply()
             _logger.info('migration %s executed', migration)
@@ -99,8 +98,9 @@ def main():
         except Exception as error:
             _logger.error('migration failed. Error: %s', error)
 
-    write_json(data, MIGRATIONS_EXECUTION_PATH)
+    if environment != 'testing':
+        write_json(data, MIGRATIONS_EXECUTION_PATH)
 
 
 if __name__ == '__main__':
-    main()
+    migrate()

@@ -7,7 +7,7 @@ class BaseTimeEntry(BaseModel):
     """
     Defines the table fileds
     """
-    id = peewee.PrimaryKeyField()
+    id = peewee.AutoField()
     event = peewee.ForeignKeyField(BaseEvent)
     start_time = peewee.DateTimeField()
     end_time = peewee.DateTimeField()

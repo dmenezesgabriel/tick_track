@@ -26,7 +26,7 @@ def initialize_db(app):
     Set the app database proxy config
     :app: Sanic instance object
     """
-    _logger.info("Initializing the database")
+    _logger.info('Initializing the database')
     base_model.database_proxy.initialize(app.db)
 
 

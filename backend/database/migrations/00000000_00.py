@@ -5,38 +5,31 @@ from playhouse.sqlite_ext import (
     SqliteExtDatabase, FTSModel, RowIDField, SearchField)
 
 
-pragmas = (
-    ('cache_size', -1024 * 64),  # 64MB page-cache.
-    ('journal_mode', 'wal'),  # Use WAL-mode (you should always use this!).
-    ('foreign_keys', 1)  # Enforce foreign-key constraints.
-)
-
-# Create database
-db = SqliteExtDatabase(os.getenv('DATABASE_PATH'), pragmas=pragmas)
+database_proxy = peewee.DatabaseProxy()
 
 
 class BaseModel(peewee.Model):
     """Class base model"""
 
     class Meta:
-        database = db
+        database = database_proxy
 
 
 class BaseOperationalSystem(BaseModel):
-    id = peewee.PrimaryKeyField()
+    id = peewee.AutoField()
     name = peewee.CharField(unique=True)
 
     class Meta:
-        db_table = "OperationalSystems"
+        table_name = "OperationalSystems"
 
 
 class BaseActivity(BaseModel):
-    id = peewee.PrimaryKeyField()
+    id = peewee.AutoField()
     name = peewee.TextField(unique=True)
     operational_system = peewee.ForeignKeyField(BaseOperationalSystem)
 
     class Meta:
-        db_table = "Activity"
+        table_name = "Activity"
 
 
 class BaseActivityIndex(BaseModel, FTSModel):
@@ -44,13 +37,13 @@ class BaseActivityIndex(BaseModel, FTSModel):
     name = SearchField()
 
     class Meta:
-        db_table = "ActivityIndex"
+        table_name = "ActivityIndex"
         # Use the porter stemming algorithm to tokenize content.
         options = {'tokenize': 'porter'}
 
 
 class BaseEvent(BaseModel):
-    id = peewee.PrimaryKeyField()
+    id = peewee.AutoField()
     name = peewee.CharField()
     model = peewee.CharField(index=True)
     model_id = peewee.CharField(index=True)
@@ -58,18 +51,29 @@ class BaseEvent(BaseModel):
     payload = JSONField()
 
     class Meta:
-        db_table = "Events"
+        table_name = "Events"
 
 
 class BaseTimeEntry(BaseModel):
-    id = peewee.PrimaryKeyField()
+    id = peewee.AutoField()
     event = peewee.ForeignKeyField(BaseEvent)
     start_time = peewee.DateTimeField()
     end_time = peewee.DateTimeField()
     duration = peewee.DecimalField()
 
     class Meta:
-        db_table = "TimeEntries"
+        table_name = "TimeEntries"
+
+
+def setup_db(path=os.getenv('DATABASE_PATH')):
+    pragmas = (
+        ('cache_size', -1024 * 64),  # 64MB page-cache.
+        ('journal_mode', 'wal'),  # Use WAL-mode (you should always use this!).
+        ('foreign_keys', 1)  # Enforce foreign-key constraints.
+    )
+
+    # Create database
+    return SqliteExtDatabase(path, pragmas=pragmas)
 
 
 def apply():
@@ -80,4 +84,11 @@ def apply():
         BaseOperationalSystem,
         BaseTimeEntry
     ]
+    # Set database
+    db = setup_db()
+
+    # Initialize database
+    database_proxy.initialize(db)
+
+    # Create tables
     db.create_tables(tables)
