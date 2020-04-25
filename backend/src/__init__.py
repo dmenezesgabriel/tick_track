@@ -3,6 +3,7 @@ import asyncio
 from sanic import Sanic
 from sanic.response import json
 from src.controllers import monitor as monitor_controller
+from src.controllers import user_idle as user_idle_controller
 from src.controllers import prod_database as prod_database_controller
 import src.routes as routes
 from src.config import app_config
@@ -26,14 +27,27 @@ def create_app(environment=os.getenv('ENVIRONMENT')):
 
     @app.listener('after_server_stop')
     async def stop(*args, **kwargs):
-        monitor_controller.stop_monitor()
+
+        # Stop Activity monitor
+        monitor_controller.stop()
         await asyncio.sleep(1)
+
+        # Stop user_idle monitor
+        user_idle_controller.stop()
+        await asyncio.sleep(1)
+
+        # Close database connections
         prod_database_controller.close_connection(app)
         await asyncio.sleep(1)
 
     # Add background tasks
     if environment != 'testing':
+
+        # Stop Activity monitor
         app.add_task(monitor_controller.run())
+
+        # Stop user_idle monitor
+        app.add_task(user_idle_controller.run())
 
     # Setup logger
     logger_helper.setup_logger(environment)

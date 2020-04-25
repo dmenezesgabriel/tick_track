@@ -10,6 +10,7 @@ from src.controllers.time_entry import DefaultTimeEntry as TimeEntry
 from src.controllers.operational_system import (
     DefaultOperationalSystem as OperationalSystem
 )
+from src.controllers import user_idle as user_idle_controller
 
 
 _logger = logging.getLogger('WindowController')
@@ -17,7 +18,7 @@ _logger = logging.getLogger('WindowController')
 _should_run = True
 
 
-def stop_monitor():
+def stop():
     _logger.info("Stopping monitor")
     global _should_run
     _should_run = False
@@ -41,7 +42,11 @@ async def run():
 
     try:
         while _should_run:
-            active_window_name = platform_helper.os_get_active_window(os_name)
+            if user_idle_controller.user_idle_seconds > 30:
+                active_window_name = "user_idle"
+            else:
+                active_window_name = (
+                    platform_helper.os_get_active_window(os_name))
             active_window_start = time_helper.now_br()
 
             if active_window_name != previous_active_window_name:
