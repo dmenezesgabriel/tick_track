@@ -44,3 +44,11 @@ def os_get_active_window(os_name: str) -> str:
     :os_name: Operational System name
     """
     return eval(f"src.helpers.{os_name}.get_active_window()")
+
+
+def os_inactivity_monitor(os_name: str) -> str:
+    """
+    Retrieve an InactivityMonitor class instance responsible to get idle time
+    :os_name: Operational System name
+    """
+    return eval(f"src.helpers.{os_name}.InactivityMonitor()")
