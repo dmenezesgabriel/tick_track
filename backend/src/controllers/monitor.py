@@ -42,7 +42,7 @@ async def run():
 
     try:
         while _should_run:
-            if user_idle_controller.user_idle_seconds > 30:
+            if user_idle_controller.user_idle_seconds > 60:
                 active_window_name = "user_idle"
             else:
                 active_window_name = (
