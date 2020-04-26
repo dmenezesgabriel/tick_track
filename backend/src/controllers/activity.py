@@ -96,31 +96,28 @@ class DefaultActivity(BaseActivity):
     @staticmethod
     def prepare_names(activity_list):
         for activity in activity_list:
-            if activity['name']:
-                description_levels = re.split('\-|\|', activity['name'])
-                main_description = description_levels[-1]
-                detailed_description = (
-                    description_levels[1:-1]
-                    if len(description_levels) > 2 else
-                    description_levels[0:-1]
-                    if len(description_levels) > 1 else None
-                )
-                detailed_description = (
-                    ' '.join(map(str, detailed_description))
-                    if detailed_description else None
-                )
-                more_details = (
-                    description_levels[0]
-                    if len(description_levels) > 2 else None
-                )
-                activity.update(dict(
-                                    main_description=main_description,
-                                    detailed_description=detailed_description,
-                                    more_details=more_details)
-                                )
-            return activity_list
-        else:
-            return activity_list
+            description_levels = re.split('\-|\|', activity['name'])
+            main_description = description_levels[-1]
+            detailed_description = (
+                description_levels[1:-1]
+                if len(description_levels) > 2 else
+                description_levels[0:-1]
+                if len(description_levels) > 1 else None
+            )
+            detailed_description = (
+                ' '.join(map(str, detailed_description))
+                if detailed_description else None
+            )
+            more_details = (
+                description_levels[0]
+                if len(description_levels) > 2 else None
+            )
+            activity.update(dict(
+                                main_description=main_description,
+                                detailed_description=detailed_description,
+                                more_details=more_details)
+                            )
+        return activity_list
 
 
 class DefaultActivityIndex(BaseActivityIndex):
