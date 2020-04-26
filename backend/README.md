@@ -40,7 +40,7 @@ response.json()
 ```
 
 **returns**
-```json
+```py
 [
     {
         'detailed_description': 'API Documentation — peewee 3.13.3 documentation ',
@@ -63,7 +63,7 @@ response.json()
 ```
 
 **returns**
-```json
+```py
 [
     {
         'detailed_description': 'API Documentation — peewee 3.13.3 documentation ',
@@ -87,7 +87,7 @@ response.json()
 ```
 
 **returns**
-```json
+```py
 [
     {
         'detailed_description': 'API Documentation — peewee 3.13.3 documentation ',
@@ -111,7 +111,7 @@ response.json()
 ```
 
 **returns**
-```json
+```py
 [
     {
         'detailed_description': 'API Documentation — peewee 3.13.3 documentation ',
@@ -135,7 +135,7 @@ response_search.json()
 ```
 
 **returns**
-```json
+```py
 [
     {
         'name': 'user@localhost: ~/Documentos/repos/notebooks',
