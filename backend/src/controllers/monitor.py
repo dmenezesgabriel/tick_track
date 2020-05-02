@@ -42,7 +42,8 @@ async def run():
 
     try:
         while _should_run:
-            if user_idle_controller.user_idle_seconds > 60:
+            # User must be inactive for more than 10 minutes
+            if user_idle_controller.user_idle_seconds > 600:
                 active_window_name = "user_idle"
             else:
                 active_window_name = (

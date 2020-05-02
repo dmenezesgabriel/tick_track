@@ -129,10 +129,12 @@ response.json()
 import requests
 
 
-body = {'text': 'Notebook'}
+body = {
+    'text': 'Notebook', 'start_date': '2020-04-15', 'end_date': '2020-04-30'}
 response_search = requests.post('http://0.0.0.0:8000/activities/search', body)
 response_search.json()
 ```
+*note: start_date and end_date params are optional*
 
 **returns**
 ```py
