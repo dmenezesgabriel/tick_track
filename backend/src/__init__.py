@@ -2,6 +2,7 @@ import os
 import asyncio
 from sanic import Sanic
 from sanic.response import json
+from sanic_cors import CORS
 from src.controllers import monitor as monitor_controller
 from src.controllers import user_idle as user_idle_controller
 from src.controllers import prod_database as prod_database_controller
@@ -16,6 +17,7 @@ def create_app(environment=os.getenv('ENVIRONMENT')):
     """
 
     app = Sanic(__name__)
+    CORS(app)
 
     app.config.from_object(app_config[environment])
     app.db = prod_database_controller.setup_db(app)

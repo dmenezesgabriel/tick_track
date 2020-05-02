@@ -39,9 +39,9 @@ def get_active_window() -> str:
         if window_name:
             return window_name.group("name").strip(b'"').decode("utf-8")
         else:
-            return b'Unmapped window'
+            return 'Unmapped window'
     except Exception:
-        return b'Unmapped window'
+        return 'Unmapped window'
 
 
 class InactivityMonitor:

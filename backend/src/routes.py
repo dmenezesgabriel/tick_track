@@ -24,5 +24,7 @@ def setup_routes(app):
 
     @app.route('/activities/search', methods=['POST'])
     async def search_activity(request):
+        start_date = request.form.get('start_date', '1900-01-01')
+        end_date = request.form.get('end_date', '3000-01-01')
         text = request.form.get('text')
-        return json(Activity.full_text_search(text))
+        return json(Activity.full_text_search(text, start_date, end_date))

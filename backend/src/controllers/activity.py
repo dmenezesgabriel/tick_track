@@ -53,7 +53,7 @@ class DefaultActivity(BaseActivity):
     @classmethod
     def load_range(cls, start_date, end_date) -> list:
         """
-        Returns activities registered between a given range
+        Returns activities registered between a given date range
         :start_date: Inital range date
         :end_date: Final range date
         """
@@ -66,17 +66,20 @@ class DefaultActivity(BaseActivity):
             .join(TimeEntry, on=(Event.id == TimeEntry.event_id))
             .join(Activity, on=(Event.model_id == Activity.id))
             .where(
-               (TimeEntry.start_time > start_date) &
-               (TimeEntry.end_time < end_date)
+                (TimeEntry.start_time > start_date) &
+                (TimeEntry.end_time < end_date)
             ).group_by(Activity.name)
         ).dicts()
 
         return cls.prepare_names([dict(result) for result in query])
 
     @classmethod
-    def full_text_search(cls, text) -> list:
+    def full_text_search(cls, text, start_date, end_date) -> list:
         """
-        Returns today's registered activities
+        Returns full text between a given date range
+        :text:
+        :start_date: Inital range date
+        :end_date: Final range date
         """
         Activity = cls.alias()
         ActivityIndex = DefaultActivityIndex().alias()
@@ -88,7 +91,11 @@ class DefaultActivity(BaseActivity):
             .join(Activity, on=(Event.model_id == Activity.id))
             .join(TimeEntry, on=(Event.id == TimeEntry.event_id))
             .join(ActivityIndex, on=(Activity.id == ActivityIndex.rowid))
-            .where(ActivityIndex.match(text))
+            .where(
+                (ActivityIndex.match(text)) &
+                (TimeEntry.start_time > start_date) &
+                (TimeEntry.end_time < end_date)
+            )
             .order_by(ActivityIndex.bm25())).dicts()
 
         return cls.prepare_names([dict(result) for result in query])
@@ -96,6 +103,8 @@ class DefaultActivity(BaseActivity):
     @staticmethod
     def prepare_names(activity_list):
         for activity in activity_list:
+            if not activity['name']:
+                continue
             description_levels = re.split('\-|\|', activity['name'])
             main_description = description_levels[-1]
             detailed_description = (
