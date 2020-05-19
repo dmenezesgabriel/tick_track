@@ -15,6 +15,7 @@ asyncio = "*"
 python-dotenv = "*"
 sanic = "*"
 sanic-cors = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.6"
