@@ -19,6 +19,7 @@ def prepare_df(df, column):
         .round()
         .apply(pd.to_timedelta, unit='s')
     ).astype(str)
+    df_grouped.columns = ['name', 'duration', 'time']
     return list(df_grouped.T.to_dict().values())
 
 

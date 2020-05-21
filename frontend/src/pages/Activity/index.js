@@ -1,54 +1,17 @@
 import React from 'react';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+} from 'recharts';
 import api from '../../services/api';
 
-// import './styles.css';
-
-
-// Seconds to time
-function secTotime(timeInSeconds) {
-  var pad = function(num, size) { return ('000' + num).slice(size * -1); },
-  time = parseFloat(timeInSeconds).toFixed(3),
-  hours = Math.floor(time / 60 / 60),
-  minutes = Math.floor(time / 60) % 60,
-  seconds = Math.floor(time - minutes * 60),
-  milliseconds = time.slice(-3);
-
-  return pad(hours, 2) + ':' + pad(minutes, 2) + ':' + pad(seconds, 2) + ',' + pad(milliseconds, 3);
-}
-
-  function convertToTime(object) {
-    object.forEach(item => {
-    item.time = secTotime(item.duration);
-    })
-  }
-
-// Sort object by it's properties in descending order
-function sortDescending(array) {
-  array.sort((a, b) => parseFloat(b.duration) - parseFloat(a.duration));
-}
-
-// Group by property and sum
-function groupBy(originalArray, descLevel) {
-  const result =[];
-  originalArray.reduce((object, item) => {
-  if (!object[item[descLevel]]) {
-    object[item[descLevel]] = { name: item[descLevel], duration: 0 };
-    result.push(object[item[descLevel]]);
-  }
-
-  object[item[descLevel]].duration += item.duration;
-  return object;
-  }, {});
-
-  // Aditional formatting
-  return result;
-}
+import './styles.css';
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activities: [],
+      totalDuration: [],
+      totalIdle: [],
       barData: [],
     };
 }
@@ -56,25 +19,80 @@ class Dashboard extends React.Component {
   getActivities() {
     const self = this
     setTimeout(() => {
-      api.get('activities/today')
+      api.post('activities/today')
       .then((response) => {
 
         // Prepare data
-        const groupedData = groupBy(response.data, 'main_description');
-        sortDescending(groupedData);
-        convertToTime(groupedData);
+        const totalDuration = response.data['total_duration']
+        const totalIdle = response.data['total_idle']
+        const tableData = response.data['table_data']
 
         // Set state
-        self.setState({activites: groupedData});
+        self.setState(
+          {
+            totalDuration: totalDuration,
+            totalIdle: totalIdle,
+            barData: tableData
+          });
       })
     }, 2000);
   }
 
   render() {
     this.getActivities();
-    console.table(this.state.activites);
     return (
-      <div>{this.state.activities}</div>
+
+      <div className="activity-container">
+
+          <h1>Activities</h1>
+          <div className="search-bar">
+            <form className="search">
+              <input type="text"/>
+              <input type="date"/>
+            </form>
+          </div>
+
+          <div className="row">
+            <div className="col-lg-3 col-sm-6">
+              <div className="card">
+                <div className="card-heading">
+                  <div>
+                    Total Duration
+                  </div>
+                </div>
+                <div className="card-value">
+                  <span>{this.state.totalDuration}</span>
+
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4 col-sm-6">
+              <div className="card">
+                <div className="card-heading">
+                  <div>
+                    Total Idle
+                  </div>
+                </div>
+                <div className="card-value">
+                  <span>{this.state.totalIdle}</span>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="container-main-description">
+            <BarChart width={1000} height={600} data={this.state.barData} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number"/>
+              <YAxis width={300} dataKey="name" type="category"/>
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="duration" fill="#8884d8" />
+            </BarChart>
+          </div>
+
+      </div>
     )
   }
 }
