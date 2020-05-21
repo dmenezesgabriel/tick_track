@@ -55,9 +55,16 @@
   position: relative;
 }
 
-.custom-tooltip {
-  background: #FFF;
-  padding: 24px;
-  border-radius: 8px;
-  position: relative;
+
+.search-bar{
+  margin: 30px;
+}
+
+.row {
+  margin: 30px;
+}
+.card {
+  padding: 30px;
+  text-align: center;
+  font-size: 20px;
 }
