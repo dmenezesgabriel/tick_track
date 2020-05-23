@@ -7,7 +7,6 @@
   width: 100%;
   display: inline-block;
   border-radius: 8px;
-  background-color: #ffffff;
   box-shadow: 5px 10px rgba(0, 0, 0, 0.01);
 }
 
@@ -29,7 +28,7 @@
 
 .col-100 {
   width: 66.66%;
-  height: 600px;
+  height: 800px;
   padding: 60px;
   border: none;
   background-color: #ffffff;
@@ -120,7 +119,8 @@ button[type=submit] {
 }
 
 .btn-search {
-  background-color:rgb(113, 89, 193); /* Green */
+  min-width: 100px;
+  background-color:rgb(113, 89, 193); /* Vi */
   border: none;
   color: white;
   padding: 15px 32px;
@@ -134,16 +134,15 @@ button[type=submit] {
 
 .sidebar {
   padding-top: 30px;
-  width: 200px;
+  width: 260px;
   color: #ffffff;
-  background-color: #313a45;
+  background-color: rgba(0, 0, 0, 0.85);
   position: fixed;
   height: 100%;
   float: right;
   position: fixed;
   left: 0;
   display: block;
-  border-right: 1px solid #eee;
   font-size: 16px;
 }
 
@@ -198,4 +197,25 @@ button[type=submit] {
 .topnav a:hover {
   background: #ddd;
   color: black;
+}
+
+.level-filter {
+  margin-bottom: 50px;
+}
+
+.description-level {
+  background-color:rgb(113, 89, 193); /* Violet */
+  border: none;
+  color: white;
+  padding: 5px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.bar-chart {
+  height: 90%;
+  width: 100%;
 }
