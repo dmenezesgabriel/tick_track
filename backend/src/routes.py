@@ -1,6 +1,10 @@
 from sanic.response import json
+import logging
 from src.controllers.activity import DefaultActivity as Activity
 from src.controllers.metrics import metrics_bundle
+
+
+_logger = logging.getLogger('Routes')
 
 
 def setup_routes(app):
@@ -10,27 +14,31 @@ def setup_routes(app):
     """
     @app.route('/activities/all', methods=['POST'])
     async def load_all(request):
-        drill_level = request.form.get('drill_level', 'main_description')
+        data = request.json
+        drill_level = data.get('drill_level', 'main_description')
         return json(metrics_bundle(Activity.load_all(), drill_level))
 
     @app.route('/activities/today', methods=['POST'])
     async def load_today(request):
-        drill_level = request.form.get('drill_level', 'main_description')
+        data = request.json
+        drill_level = data.get('drill_level', 'main_description')
         return json(metrics_bundle(Activity.load_today(), drill_level))
 
     @app.route('/activities/date.range', methods=['POST'])
     async def load_date_range(request):
-        drill_level = request.form.get('drill_level', 'main_description')
-        start_date = request.form.get('start_date')
-        end_date = request.form.get('end_date')
+        data = request.json
+        drill_level = data.get('drill_level', 'main_description')
+        start_date = data.get('start_date', '1900-01-01')
+        end_date = data.get('end_date', '3000-01-01')
         return json(metrics_bundle(
             Activity.load_range(start_date, end_date), drill_level))
 
     @app.route('/activities/search', methods=['POST'])
     async def search_activity(request):
-        drill_level = request.form.get('drill_level', 'main_description')
-        start_date = request.form.get('start_date', '1900-01-01')
-        end_date = request.form.get('end_date', '3000-01-01')
-        text = request.form.get('text')
+        data = request.json
+        drill_level = data.get('drill_level', 'main_description')
+        start_date = data.get('start_date', '1900-01-01')
+        end_date = data.get('end_date', '3000-01-01')
+        text = data.get('text')
         return json(metrics_bundle(Activity.full_text_search(
             text, start_date, end_date), drill_level))

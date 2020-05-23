@@ -57,6 +57,11 @@ class DefaultActivity(BaseActivity):
         :start_date: Inital range date
         :end_date: Final range date
         """
+        if not start_date:
+            start_date = '1900-01-01'
+        if not end_date:
+            end_date = '3000-01-01'
+
         Activity = cls.alias()
         query = (
             Event.select(
@@ -81,6 +86,11 @@ class DefaultActivity(BaseActivity):
         :start_date: Inital range date
         :end_date: Final range date
         """
+        if not start_date:
+            start_date = '1900-01-01'
+        if not end_date:
+            end_date = '3000-01-01'
+
         Activity = cls.alias()
         ActivityIndex = DefaultActivityIndex().alias()
         query = (
