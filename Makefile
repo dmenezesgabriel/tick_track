@@ -1,3 +1,6 @@
+migrate:
+	(cd backend; make migrate)
+
 run-prod:
 	(cd backend; make run-prod) &
 	(cd frontend; make run-prod)
