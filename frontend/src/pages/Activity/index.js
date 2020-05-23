@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import api from '../../services/api';
 
@@ -41,57 +41,82 @@ class Dashboard extends React.Component {
   render() {
     this.getActivities();
     return (
-
-      <div className="activity-container">
-
-          <h1>Activities</h1>
-          <div className="search-bar">
-            <form className="search">
-              <input type="text"/>
-              <input type="date"/>
-            </form>
+      <div className="container-fluid">
+          <div class="topnav">
+            <a href="#about">About</a>
           </div>
 
-          <div className="row">
-            <div className="col-lg-3 col-sm-6">
-              <div className="card">
-                <div className="card-heading">
-                  <div>
-                    Total Duration
+          <div class="sidebar">
+            <a class="active" href="#home"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="#news"><i class="fal fa-clock"></i> Pomodoro Timer</a>
+            <a href="#contact"><i class="fal fa-border-all"></i> Board</a>
+            <a href="#about"><i class="far fa-bookmark"></i> Bookmark</a>
+          </div>
+
+        <div className="main-content">
+            <div className="search-bar">
+              <form className="search">
+                <div className="row">
+                  <div className="col-20">
+                    <input type="text" className="search-input"/>
+                  </div>
+                  <div className="col-15">
+                    <input type="date" className="first-date"/>
+                  </div>
+                  <div className="col-15">
+                    <input type="date" className="last-date"/>
+                  </div>
+                  <button type="submit" className="btn-search">search</button>
+                </div>
+              </form>
+            </div>
+
+            <div className="row">
+              <div className="col-33">
+                <div className="kpi">
+                  <div className="kpi-heading">
+                    <div>
+                      Total Duration
+                    </div>
+                  </div>
+                  <div className="kpi-value">
+                    <span>{this.state.totalDuration}</span>
+
                   </div>
                 </div>
-                <div className="card-value">
-                  <span>{this.state.totalDuration}</span>
+              </div>
+              <div className="col-33">
+                <div className="kpi">
+                  <div className="kpi-heading">
+                    <div>
+                      Total Idle
+                    </div>
+                  </div>
+                  <div className="kpi-value">
+                    <span>{this.state.totalIdle}</span>
 
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="col-lg-4 col-sm-6">
-              <div className="card">
-                <div className="card-heading">
-                  <div>
-                    Total Idle
-                  </div>
-                </div>
-                <div className="card-value">
-                  <span>{this.state.totalIdle}</span>
 
-                </div>
+            <div className="row">
+              <div className="col-100">
+                <span className="title">Time Spent on Activity</span>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart width={1000} height={600} data={this.state.barData} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number"/>
+                    <YAxis width={300} dataKey="name" type="category"/>
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="duration" fill="rgb(113, 89, 193)" />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </div>
-          </div>
 
-          <div className="container-main-description">
-            <BarChart width={1000} height={600} data={this.state.barData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number"/>
-              <YAxis width={300} dataKey="name" type="category"/>
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="duration" fill="#8884d8" />
-            </BarChart>
-          </div>
-
+        </div>
       </div>
     )
   }
