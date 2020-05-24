@@ -58,12 +58,12 @@
 
 .kpi-heading {
   font-size: 15px;
-  color: #555;
+  color: #ffffff;
 }
 
 .kpi-value {
   font-size: 40px;
-  color: #555;
+  color: #ffffff;
 }
 
 .title {
@@ -185,7 +185,6 @@ button[type=submit] {
 
 /* Links inside the topnav */
 .topnav a {
-  float: right;
   display: block;
   color: #f2f2f2;
   text-align: center;
@@ -195,9 +194,22 @@ button[type=submit] {
 
 /* Change background on mouse-over */
 .topnav a:hover {
-  background: #ddd;
-  color: black;
+  color: #555;
+  text-decoration: none;
 }
+
+div .left-align {
+  float: left;
+}
+
+div .rigth-align {
+  float: right;
+}
+
+.application-name {
+  font-size: 18px;
+}
+
 
 .level-filter {
   margin-bottom: 50px;
@@ -215,7 +227,20 @@ button[type=submit] {
   border-radius: 8px;
 }
 
-.bar-chart {
+.chart-wrapper {
   height: 90%;
   width: 100%;
+}
+
+.bar-chart {
+  height: 90%;
+  width: 90%;
+}
+
+.total-duration {
+  background-color: #00ac69;
+}
+
+.total-idle {
+  background-color: #f4a100;
 }

@@ -89,7 +89,12 @@ class Dashboard extends React.Component {
     return (
       <div className="container-fluid">
           <div className="topnav">
-            <a href="#about">About</a>
+              <div className="left-align application-name">
+                <a href="#home">Tick Track</a>
+              </div>
+              <div className="rigth-align">
+                <a href="#about">About</a>
+              </div>
           </div>
 
           <div className="sidebar">
@@ -140,8 +145,8 @@ class Dashboard extends React.Component {
             </div>
 
             <div className="row">
-              <div className="col-33">
-                <div className="kpi">
+              <div className="col-33 total-duration">
+                <div className="kpi total-duration">
                   <div className="kpi-heading">
                     <div>
                       Total Duration
@@ -153,8 +158,8 @@ class Dashboard extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="col-33">
-                <div className="kpi">
+              <div className="col-33 total-idle">
+                <div className="kpi total-idle">
                   <div className="kpi-heading">
                     <div>
                       Total Idle
@@ -180,17 +185,19 @@ class Dashboard extends React.Component {
                     </select>
                   </form>
                 </div>
-                <div className="bar-chart">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart width={1000} height={600} data={this.state.barData} layout="vertical">
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis type="number"/>
-                      <YAxis width={300} dataKey="name" type="category"/>
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="duration" fill="rgb(113, 89, 193)" />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <div className="chart-wrapper">
+                    <div className="bar-chart">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart width={1000} height={600} data={this.state.barData} layout="vertical">
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis type="number"/>
+                          <YAxis width={300} dataKey="name" type="category"/>
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="duration" fill="rgb(113, 89, 193)" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                 </div>
               </div>
             </div>

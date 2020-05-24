@@ -1,5 +1,5 @@
 run-prod:
-	npm start
+	docker-compose up web
 
 run-dev:
-	npm start
+	docker-compose up web

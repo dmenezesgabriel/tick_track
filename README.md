@@ -10,7 +10,8 @@ This project is my initial step as a full stack developer. It all started a ong 
 
 - python >= 3.6
 - pipenv
-- npm
+- docker
+- docker-compose
 
 ## Stack
 
