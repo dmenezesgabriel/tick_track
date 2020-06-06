@@ -2,16 +2,17 @@ import React from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
+import Sidebar from '../../components/sidebar';
 import api from '../../services/api';
 import './styles.css';
 
 
 function _onFocus(event) {
-    event.currentTarget.type = "date";
+  event.currentTarget.type = "date";
 }
 
 function _onBlur(event) {
-    event.currentTarget.type = "text";
+  event.currentTarget.type = "text";
 }
 
 class Dashboard extends React.Component {
@@ -25,6 +26,7 @@ class Dashboard extends React.Component {
       search: '',
       startDate: '',
       endDate: '',
+      showing: 'Today',
     };
 
     this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -51,7 +53,7 @@ class Dashboard extends React.Component {
             barData: tableData
           });
       })
-    }, 2000);
+    }, 0);
   }
 
   handleChange(event) {
@@ -75,133 +77,155 @@ class Dashboard extends React.Component {
 
     if(text) {
       this.getActivities('activities/search', data)
+      this.setState(
+        {
+          showing: 'All',
+        });
     } else if(startDate || endDate) {
       this.getActivities('activities/date.range', data)
+      this.setState(
+        {
+          showing: `From ${startDate} to ${endDate}`,
+        });
     } else {
       this.getActivities('activities/today', data)
+      this.setState(
+        {
+          showing: 'Today',
+        });
     };
 
     console.log(`end ${this.state.drillLevel}`);
   }
 
+  toggleClass = () => {
+    const sidebarCollapse = document.querySelector('#sidebarCollapse');
+    const sidebar = document.querySelector('#sidebar');
+    const content = document.querySelector('#content');
+
+    sidebar.classList.toggle('active');
+    content.classList.toggle('active');
+    sidebarCollapse.classList.toggle('active');
+  };
+
   render() {
     console.log(this.state.drillLevel);
     return (
-      <div className="container-fluid">
-          <div className="topnav">
-              <div className="left-align application-name">
-                <a href="#home">Tick Track</a>
-              </div>
-              <div className="rigth-align">
-                <a href="#about">About</a>
-              </div>
-          </div>
-
-          <div className="sidebar">
-            <a className="active" href="#home"><i className="fas fa-chart-line"></i> Dashboard</a>
-            <a href="#news"><i className="fal fa-clock"></i> Pomodoro Timer</a>
-            <a href="#contact"><i className="fal fa-border-all"></i> Board</a>
-            <a href="#about"><i className="far fa-bookmark"></i> Bookmark</a>
-          </div>
-
-        <div className="main-content">
-            <div className="search-bar">
-              <form className="search" onSubmit={this.onFormSubmit}>
-                <div className="row">
-                  <div className="col-20">
-                    <input
+      <div class="container-fluid bg-light">
+        <div class="row">
+          <Sidebar />
+          <div class="col-md-9 col-lg-10 pt-3 px-4" id="content">
+            <nav class="navbar">
+              <div class="container-fluid">
+                  <button type="button" id="sidebarCollapse" onClick={this.toggleClass} class="btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </button>
+                  <form className="form-inline mt-2 mt-md-0" onSubmit={this.onFormSubmit}>
+                    <div className="row">
+                    <div className="col-20">
+                      <input
                       type="text"
-                      className="search-input"
+                      className="form-control mr-sm-2"
                       value={this.state.search}
                       onChange={event => this.setState({search: event.target.value})}
                       placeholder="Search"
-                    />
-                  </div>
-                  <div className="col-15">
-                    <input
+                      />
+                    </div>
+                    <div className="col-15">
+                      <input
                       placeholder="From: Date"
-                      className="first-date"
+                      className="form-control mr-sm-2"
                       value={this.state.startDate}
                       onChange={event => this.setState({startDate: event.target.value})}
                       type="text"
                       onFocus={_onFocus}
                       onBlur={_onBlur}
-                    />
-                  </div>
-                  <div className="col-15">
-                    <input
+                      />
+                    </div>
+                    <div className="col-15">
+                      <input
                       placeholder="To: Date"
-                      className="last-date"
+                      className="form-control mr-sm-2"
                       value={this.state.endDate}
                       onChange={event=> this.setState({endDate: event.target.value})}
                       type="text"
                       onFocus={_onFocus}
                       onBlur={_onBlur}
-                    />
-                  </div>
-                  <button type="submit" className="btn-search">search</button>
-                </div>
-              </form>
-            </div>
-
-            <div className="row">
-              <div className="col-33 total-duration">
-                <div className="kpi total-duration">
-                  <div className="kpi-heading">
-                    <div>
-                      Total Duration
+                      />
                     </div>
+                    <button type="submit" className="btn bg-info text-white">search</button>
                   </div>
-                  <div className="kpi-value">
-                    <span>{this.state.totalDuration}</span>
+                </form>
+              </div>
+            </nav>
+            <div className="row">
 
+              <div className="col-xl-3 col-md-6 mb-4">
+                <div className="card bg-primary border-primary shadow h-100 py-2">
+                  <div className="card-body">
+                    <div className="row no-gutters align-items-center">
+                      <div className="col mr-2">
+                        <div className="text-xs font-weight-bold text-white text-uppercase mb-1">Total Duration</div>
+                        <hr></hr>
+                        <span className="h5 text-white">{this.state.totalDuration}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="col-33 total-idle">
-                <div className="kpi total-idle">
-                  <div className="kpi-heading">
-                    <div>
-                      Total Idle
-                    </div>
-                  </div>
-                  <div className="kpi-value">
-                    <span>{this.state.totalIdle}</span>
 
+              <div className="col-xl-3 col-md-6 mb-4">
+                <div className="card bg-warning border-warning shadow h-100 py-2">
+                  <div className="card-body">
+                    <div className="row no-gutters align-items-center">
+                      <div className="col mr-2">
+                        <div className="text-xs font-weight-bold text-white text-uppercase mb-1">Total Idle</div>
+                        <hr></hr>
+                        <span className="h5 text-white">{this.state.totalIdle}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
+            </div>
             <div className="row">
-              <div className="col-100">
-                <div className="col-25 level-filter">
-                <span className="title">Time Spent on Activity</span>
-                  <form>
-                    <select className="description-level" value={this.state.drillLevel} onChange={this.handleChange}>
-                      <option value="main_description">Main Description</option>
-                      <option value="detailed_description">Detailed Description</option>
-                      <option value="more_details">More Details</option>
-                    </select>
-                  </form>
-                </div>
-                  <div className="chart-wrapper">
+              <div className="col-md-8 col-lg-7">
+                <div className="card shadow mb-4">
+                  <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <div className="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                      Ativities
+                    </div>
+                  </div>
+                  <div className="card-body">
+                    <form className="form-inline mt-2 mt-md-0">
+                      <select className="form-control mr-sm-2" value={this.state.drillLevel} onChange={this.handleChange}>
+                        <option value="main_description">Main Description</option>
+                        <option value="detailed_description">Detailed Description</option>
+                        <option value="more_details">More Details</option>
+                      </select>
+                    </form>
+                    <hr></hr>
+                    <span className="ml-1 text-xs mb-1">{this.state.showing}</span>
                     <div className="bar-chart">
-                      <ResponsiveContainer width="100%" height="100%">
+                      <ResponsiveContainer width="99%" aspect={1.5}>
                         <BarChart width={1000} height={600} data={this.state.barData} layout="vertical">
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis type="number"/>
-                          <YAxis width={300} dataKey="name" type="category"/>
+                          <YAxis width={200} dataKey="name" type="category"/>
                           <Tooltip />
                           <Legend />
-                          <Bar dataKey="duration" fill="rgb(113, 89, 193)" />
+                          <Bar dataKey="duration" fill="#4e73df" />
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
+                  </div>
                 </div>
               </div>
             </div>
-
+          </div>
         </div>
       </div>
     )
