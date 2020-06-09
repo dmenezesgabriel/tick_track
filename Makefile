@@ -1,3 +1,7 @@
+
+install-py:
+	cd backend && pipenv install pipfile
+
 migrate:
 	(cd backend; make migrate)
 

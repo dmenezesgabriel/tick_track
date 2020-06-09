@@ -1,3 +1,6 @@
+requirements:
+	pipenv lock --requirements > requirements.txt
+
 run-prod:
 	export ENVIRONMENT=production; \
 	pipenv run python __main__.py

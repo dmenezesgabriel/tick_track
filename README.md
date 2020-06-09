@@ -21,6 +21,20 @@ This project is my initial step as a full stack developer. It all started a ong 
 
 ## Usage
 
+### Instalation
+
+#### pipenv
+
+```sh
+pip3 install pipenv
+```
+
+#### Python requirements
+
+```make
+make install-py
+```
+
 ### Runing the server
 
 #### Apply database's migrations
@@ -47,5 +61,4 @@ make run-dev
 
 ## Images
 
-2020-05-23
 ![](images/demo-frontend.png)

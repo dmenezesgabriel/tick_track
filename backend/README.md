@@ -1,5 +1,7 @@
 # Tick Track
 
+[DOCUMENTATION OUTDATED]
+
 ## Usage
 
 ### Runing the server
