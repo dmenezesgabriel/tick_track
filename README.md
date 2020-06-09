@@ -21,7 +21,7 @@ This project is my initial step as a full stack developer. It all started a ong 
 
 ## Usage
 
-### Instalation
+### Installation
 
 #### pipenv
 
