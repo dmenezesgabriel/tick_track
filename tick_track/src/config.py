@@ -1,9 +1,4 @@
-import os
-from dotenv import load_dotenv
 from src.helpers import folder as folder_helper
-
-
-load_dotenv(dotenv_path=folder_helper.path(['environment_variables.env']))
 
 
 class Config(object):
@@ -12,8 +7,8 @@ class Config(object):
     """
     DEBUG = False
     TESTING = False
-    HOST = os.getenv('HOST')
-    PORT = os.getenv('PORT')
+    HOST = "0.0.0.0"
+    PORT = 8000
 
 
 class ProductionConfig(Config):
