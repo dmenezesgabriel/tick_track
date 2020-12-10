@@ -1,14 +1,14 @@
 
 install-py:
-	cd backend && pipenv install pipfile
+	cd tick_track && pipenv install pipfile
 
 migrate:
-	(cd backend; make migrate)
+	(cd tick_track; make migrate)
 
 run-prod:
-	(cd backend; make run-prod) &
+	(cd tick_track; make run-prod) &
 	(cd frontend; make run-prod)
 
 run-dev:
-	(cd backend; make run-dev) &
+	(cd tick_track; make run-dev) &
 	(cd frontend; make run-dev)
