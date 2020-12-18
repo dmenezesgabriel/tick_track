@@ -1,0 +1,22 @@
+name: Lint
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+
+      - name: Install dependencies with pipenv
+        run: |
+          pip install -r requirements-dev.txt
+
+      - run: python3 -m isort --recursive --diff .
+      - run: python3 -m black --check .
+      - run: python3 -m flake8 ./tick_track
