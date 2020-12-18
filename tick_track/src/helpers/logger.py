@@ -1,25 +1,16 @@
 import logging
+import os
+
+import src.helpers.folder as folder_helper
 
 
-def setup_logger(environment) -> logging.Logger:
+def setup_logger(app):
     """
     Overwrites logger default configuration
-    :environment: receives a string that can be 'development', 'production',
-    or 'testing'
+    :app: receives a Sanic object
     """
-    if environment == 'production':
-        log_level = logging.INFO
-    else:
-        log_level = logging.DEBUG
+    logs_path = f"{folder_helper.MAIN_FOLDER}/logs/"
+    if not os.path.isdir(logs_path):
+        os.makedirs(logs_path)
 
-    logging_format = "[%(asctime)s] %(process)d-%(levelname)s "
-    logging_format += "%(module)s::%(funcName)s():l%(lineno)d: "
-    logging_format += "%(message)s"
-
-    logging.basicConfig(
-        format=logging_format,
-        level=log_level
-    )
-    logger = logging.getLogger()
-
-    return logger
+    logging.config.dictConfig(app.config.LOGGING_CONFIG)
