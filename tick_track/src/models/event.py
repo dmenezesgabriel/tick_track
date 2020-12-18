@@ -3,10 +3,11 @@ from playhouse.sqlite_ext import JSONField
 from src.models.base import BaseModel
 
 
-class BaseEvent(BaseModel):
+class Event(BaseModel):
     """
     Defines the table fileds
     """
+
     id = peewee.AutoField()
     name = peewee.CharField()
     model = peewee.CharField(index=True)

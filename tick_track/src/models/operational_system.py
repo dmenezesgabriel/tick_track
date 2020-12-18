@@ -2,10 +2,11 @@ from src.models.base import BaseModel
 import peewee
 
 
-class BaseOperationalSystem(BaseModel):
+class OperationalSystem(BaseModel):
     """
     Defines the table fileds
     """
+
     id = peewee.AutoField()
     name = peewee.CharField(unique=True)
 
