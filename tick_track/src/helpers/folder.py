@@ -1,8 +1,8 @@
 import os
 
-
 MAIN_FOLDER = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
+    os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
+)
 
 
 def path(path_list):
