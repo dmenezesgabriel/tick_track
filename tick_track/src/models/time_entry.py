@@ -1,14 +1,15 @@
 import peewee
 from src.models.base import BaseModel
-from src.models.event import BaseEvent
+from src.models.event import Event
 
 
-class BaseTimeEntry(BaseModel):
+class TimeEntry(BaseModel):
     """
     Defines the table fileds
     """
+
     id = peewee.AutoField()
-    event = peewee.ForeignKeyField(BaseEvent)
+    event = peewee.ForeignKeyField(Event)
     start_time = peewee.DateTimeField()
     end_time = peewee.DateTimeField()
     duration = peewee.DecimalField()
