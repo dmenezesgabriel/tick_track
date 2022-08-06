@@ -4,7 +4,7 @@ setup(
     version='1.0.0',
     packages=find_packages(),
     install_requires=[
-        'sanic==19.12.2',
+        'sanic==20.12.7',
         'pytz==2019.3',
         'peewee==3.13.1',
         'python-dotenv'
